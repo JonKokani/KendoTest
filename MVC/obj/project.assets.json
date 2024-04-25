@@ -441,11 +441,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Jhony\\OneDrive\\Desktop\\KendoUI\\MVC\\MVC.csproj",
+      "projectUniqueName": "c:\\Users\\Jhony\\OneDrive\\Desktop\\KendoTest\\MVC\\MVC.csproj",
       "projectName": "MVC",
-      "projectPath": "C:\\Users\\Jhony\\OneDrive\\Desktop\\KendoUI\\MVC\\MVC.csproj",
+      "projectPath": "c:\\Users\\Jhony\\OneDrive\\Desktop\\KendoTest\\MVC\\MVC.csproj",
       "packagesPath": "C:\\Users\\Jhony\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Jhony\\OneDrive\\Desktop\\KendoUI\\MVC\\obj\\",
+      "outputPath": "c:\\Users\\Jhony\\OneDrive\\Desktop\\KendoTest\\MVC\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Jhony\\AppData\\Roaming\\NuGet\\NuGet.Config"

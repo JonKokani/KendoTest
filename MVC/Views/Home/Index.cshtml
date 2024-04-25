@@ -1,125 +1,153 @@
-﻿<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8"/>
-    <title>Kendo UI Snippet</title>
-    
-    <!-- Include jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    
-    <!-- Include Kendo UI CSS and JavaScript -->
-    <link href="https://kendo.cdn.telerik.com/2022.1.301/styles/kendo.default-v2.min.css" rel="stylesheet" />
-    <script src="https://kendo.cdn.telerik.com/2022.1.301/js/kendo.all.min.js"></script>
-</head>
-<body>
-  
-    <div id="example">
-      <div id="grid"></div>
+﻿<!-- Include Kendo UI CSS -->
+<link rel="stylesheet" href="https://kendo.cdn.telerik.com/2022.1.301/styles/kendo.common.min.css">
+<link rel="stylesheet" href="https://kendo.cdn.telerik.com/2022.1.301/styles/kendo.bootstrap-v4.min.css">
+<link rel="stylesheet" href="https://kendo.cdn.telerik.com/2021.3.1207/styles/kendo.default-v2.min.css" />
 
-      <script>
-        $(document).ready(function () {
-          var crudServiceBaseUrl = "https://localhost:7287/";
-          
-          var dataSource = new kendo.data.DataSource({
-            transport: {
-              read:  {
-                url: crudServiceBaseUrl + "Home/Data",
-                dataType: "json"
-              },
-              update: {
-                url: crudServiceBaseUrl + "/Products/Update",
-                dataType: "json"
-              },
-              destroy: {
-                url: crudServiceBaseUrl + "/Products/Destroy",
-                dataType: "json"
-              },
-              create: {
-                url: crudServiceBaseUrl + "/Products/Create",
-                dataType: "json"
-              },
-              parameterMap: function(options, operation) {
-                if (operation !== "read" && options.models) {
-                  return {models: kendo.stringify(options.models)};
-                }
-              }
-            },
-            batch: true,
-            pageSize: 20,
-            schema: {
-              model: {
-                id: "id",
-                fields: {
-                  id: { editable: false, nullable: true },
-                  name: { type: "string", editable: true },
-                  date: { type: "date", editable: true },
-                  gender: { type: "string", editable: true },
-                  hobbies: { type: "string", editable: true },
-                  cname: { type: "string", editable: true },
-                  imgPath: { type: "string", editable: true }
-                }
-              }
+<!-- Include jQuery and Kendo UI JS -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://kendo.cdn.telerik.com/2022.1.301/js/kendo.all.min.js"></script>
+<style>
+    #grid {
+        font-size: 16px;
+    }
+</style>
+<div id="grid">
+    <div>
+        <button class="k-button k-primary" id="add">Add New Records</button>
+        <button id="deleteSelected" class="k-button k-primary float-end">Multiple Delete</button>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#add').kendoButton({
+            click: function () {
+                window.location.href = "/Home/AddData"
             }
-          });
+        });
+        $('#deleteSelected').kendoButton();
 
-          $("#grid").kendoGrid({
+
+        var dataSource = new kendo.data.DataSource({
+            transport: {
+                read: {
+                    url: '/Home/Data',
+                    dataType: 'json'
+                }
+            },
+            pageSize: 10,
+            schema: {
+                model: {
+                    id: "id",
+                    fields: {
+                        id: { type: "number" },
+                        name: { type: "string" },
+                        date: { type: "date" },
+                        gender: { type: "string" },
+                        hobbies: { type: "string" },
+                        cname: { type: "string" },
+                        imgPath: { type: "string" }
+                    }
+                }
+            }
+        });
+
+        $('#grid').kendoGrid({
             dataSource: dataSource,
             pageable: true,
+            sortable: true,
+            filterable: true,
+            groupable: true,
             height: 550,
-            toolbar: ["create"],
-            columns: [
-              { field: "id", title: "ID", width: 100 },
-              { field: "name", title: "Name", format: "{0:c}", width: 105 },
-              { field: "date", title: "Date", format: "{0:yyyy-MM-dd}", width: 130 },
-              { field: "gender", title: "Gender", width: 125 },
-              { field: "hobbies", title: "Hobbies", width: 200 },
-              { field: "imgPath", title: "Image", template: "<div class='k-text-center'><img src='/images/#imgPath#' style='width=100px'/></div>", width: 120 },
-              { field: "cname", title: "Category", width: 105 },
-              { 
-                command: [
-                  "edit",
-                  { name: "myDelete", text: "Delete" }
-                ], 
-                title: "&nbsp;", 
-                width: "350px" 
-              }
+            toolbar: [
+                { name: "search" }
             ],
-            editable: {
-              mode: "inline",
-              confirmation: false
-            },
-            dataBound: function() {
-              $(".k-grid-myDelete span").addClass("k-icon k-delete");
-            },
-            cancel: function() {
-              setTimeout(function(){
-                $(".k-grid-myDelete span").addClass("k-icon k-delete");
-              });
-            }
-          });
+            columns: [
+                { selectable: true, width: "50px" },
+                { field: "id", title: "ID" },
+                { field: "name", title: "Name" },
+                {
+                    field: "date",
+                    title: "Date",
+                    format: "{0:yyyy-MM-dd}"
+                },
+                {
+                    field: "gender", title: "Gender",
+                    template: function (dataItem) {
+                        if (dataItem.gender == "Male") {
+                            return '<span class="btn btn-primary">Male</span>';
+                        }
+                        else {
+                            return '<span class="btn btn-danger">Male</span>';
 
-          $("#grid").on("click", ".k-grid-myDelete", function(e) {
-            e.preventDefault();
+                        }
 
-            var command = $(this);
-            var cell = command.closest("td");
-
-            command.remove();
-            cell.append('<a class="k-button k-button-icontext k-grid-myConfirm" href="#"><span class="k-icon k-update"></span>Confirm</a>');
-            cell.append('<a class="k-button k-button-icontext k-grid-myCancel" href="#"><span class="k-icon k-cancel"></span>Cancel</a>');
-          });
-
-          $("#grid").on("click", ".k-grid-myConfirm", function(e){
-            e.preventDefault();
-            $("#grid").data("kendoGrid").removeRow($(this).closest("tr"));
-          });
-
-          $("#grid").on("click", ".k-grid-myCancel", function(e){
-            e.preventDefault();
-            $("#grid").data("kendoGrid").refresh();
-          });
+                    }
+                },
+                { field: "hobbies", title: "Hobbies" },
+                { field: "cname", title: "Course" },
+                {
+                    field: "imgPath",
+                    title: "Image",
+                    template: "<img src='/images/#:imgPath#' alt='Image' style='width: 100px;'/>"
+                },
+                {
+                    title: "Actions",
+                    template: '<button class="k-button k-primary edit-btn">Edit</button>' + '&nbsp; &nbsp;' +
+                              '<button class="k-button delete-btn">Delete</button>'
+                },
+            ]
         });
-      </script>
-    </div>
-</body>
-</html>
+
+        var grid = $("#grid").data("kendoGrid");
+        grid.dataSource.group({ field: "gender" });
+
+        $('#grid').on('click', '.edit-btn', function () {
+            var dataItem = $("#grid").data("kendoGrid").dataItem($(this).closest("tr"));
+            var id = dataItem.id;
+            window.location.href = "/Home/UpdateData?id=" + id;
+        });
+
+        $('#grid').on('click', '.delete-btn', function () {
+            var dataItem = $("#grid").data("kendoGrid").dataItem($(this).closest("tr"));
+            var id = dataItem.id;
+            $.ajax({
+                url: '/Home/Delete',
+                type: 'POST',
+                data: { id: id },
+                success: function (response) {
+                    console.log("Item with ID " + id + " deleted successfully.");
+                    window.location.href = "/Home/Index";
+                },
+                error: function (error) {
+                    console.error(error);
+                }
+            });
+        });
+
+        $("#deleteSelected").click(function () {
+            var grid = $("#grid").data("kendoGrid");
+            var selectedRows = grid.select();
+            var selectedIds = [];
+            selectedRows.each(function () {
+                var dataItem = grid.dataItem($(this));
+                selectedIds.push(dataItem.id);
+            });
+            console.log(selectedIds);
+            $.ajax({
+                url: '/Home/MDelete',
+                type: 'POST',
+                data: { id: selectedIds },
+                success: function (response) {
+                    alert("Data deleted successfully.");
+
+                },
+                error: function (error) {
+                    alert("Sorry ! data not deleted.");
+
+                }
+
+            });
+        });
+    });
+</script>

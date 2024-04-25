@@ -15,6 +15,6 @@ namespace MVC.Models
         public int cid { get; set; }
         public string cname { get; set; }
         public IFormFile imgFile { get; set; }
-        public string imgPath { get; set; } 
+        public string imgPath { get; set; }   
     }
 }

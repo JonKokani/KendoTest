@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "NZ0vESDvORYsjqjQQFMfzH9HZSXTKxoF1gLDT9mXgXfXAgCR0reoMXRECIhwI7txMjqIXbFOo5XQxwJ/vVtEZg==",
+  "dgSpecHash": "DyjasYhLP9UgC0neZGKe1BVCCmYbq9H0ZAswAwx6NfXQCbvXzKoXuLpZoWPMafgOzf4RzwmeOKidU9a3ClHQbw==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Jhony\\OneDrive\\Desktop\\KendoUI\\MVC\\MVC.csproj",
+  "projectFilePath": "C:\\Users\\Jhony\\OneDrive\\Desktop\\KendoTest\\MVC\\MVC.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Jhony\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\8.0.0\\microsoft.extensions.dependencyinjection.abstractions.8.0.0.nupkg.sha512",
     "C:\\Users\\Jhony\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\8.0.0\\microsoft.extensions.logging.abstractions.8.0.0.nupkg.sha512",

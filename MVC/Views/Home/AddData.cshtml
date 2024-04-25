@@ -1,0 +1,106 @@
+﻿@model tblData
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Kendo UI CSS -->
+<link rel="stylesheet" href="https://kendo.cdn.telerik.com/2022.1.119/styles/kendo.default-v2.min.css" />
+<link rel="stylesheet" href="https://kendo.cdn.telerik.com/2022.1.119/styles/kendo.common.min.css" />
+
+<!-- Kendo UI JavaScript -->
+<script src="https://kendo.cdn.telerik.com/2022.1.119/js/kendo.all.min.js"></script>
+
+<div class="container" style="width: 35%;">
+    <center>
+        <h2>Add Data</h2>
+    </center>
+    <form id="data" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label asp-for="name">Name</label>
+            <input type="text" asp-for="name" id="name" class="k-textbox">
+            <span asp-validation-for="name"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="date">Date</label>
+            <input type="date" asp-for="date" id="date" class="k-datepicker" min=@DateTime.Today.ToString("yyyy-MM-dd")>
+            <span asp-validation-for="date"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="gender">Gender</label> <br>
+            <input type="radio" asp-for="gender" id="gender" class="k-radio" value="Male">Male <br>
+            <input type="radio" asp-for="gender" id="gender" class="k-radio" value="Female">Female
+            <span asp-validation-for="gender"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="hobbies">Hobbies</label> <br>
+            @foreach (var h in new List<string> { "Coding", "Testing", "Reading" })
+            {
+                <input type="checkbox" name="hobbies" id="hobbies" class="k-checkbox" value="@h">
+                <label asp-for="@h">@h</label> <br>
+            }
+            <span asp-validation-for="hobbies"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="cid">Course</label> <br>
+            <select asp-for="cid" class="k-dropdown" id="cid">
+                <option value="">--- Select Course --</option>
+                @foreach(var c in ViewBag.course)
+                {
+                 <option value="@c.cid">@c.cname</option>
+                }
+            </select>
+            
+            <span asp-validation-for="cid"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="imgFile">Name</label>
+            <input type="file" asp-for="imgFile" id="imgFile" class="k-fileupload">
+            <span asp-validation-for="imgFile"></span>
+        </div>
+        <br>
+        <button type="submit" class="k-button" id="add">Add Now</button>
+        <button type="submit" class="k-button" id="back">Back to Home</button>
+
+    </form>
+
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#name').kendoTextBox();
+        $('#date').kendoDatePicker();
+        $('.k-radio').kendoRadioButton();
+        $('.k-checkbox').kendoCheckBox();
+        $('#cid').kendoDropDownList();
+        $('#imgFile').kendoUpload();
+        $('#add').kendoButton();
+        $('#back').kendoButton({
+            click: function(){
+                window.location.href='/Home/Index';
+            }
+        });
+
+    });
+
+    $('#add').click(function(event){
+        event.preventDefault();
+        var formdata= new FormData($('#data')[0])
+        
+        $.ajax({
+            url: '/Home/AddData',
+            type: 'POST',
+            contentType: false,
+            processData: false,
+            data: formdata,
+            success: function(response){
+                console.log(response.message);
+                window.location.href = "/Home/Index";
+            },
+            error: function(error){
+                console.log(error);
+            }
+        })
+        
+    })
+</script>
