@@ -1,0 +1,125 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Kendo UI Snippet</title>
+    
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <!-- Include Kendo UI CSS and JavaScript -->
+    <link href="https://kendo.cdn.telerik.com/2022.1.301/styles/kendo.default-v2.min.css" rel="stylesheet" />
+    <script src="https://kendo.cdn.telerik.com/2022.1.301/js/kendo.all.min.js"></script>
+</head>
+<body>
+  
+    <div id="example">
+      <div id="grid"></div>
+
+      <script>
+        $(document).ready(function () {
+          var crudServiceBaseUrl = "https://localhost:7287/";
+          
+          var dataSource = new kendo.data.DataSource({
+            transport: {
+              read:  {
+                url: crudServiceBaseUrl + "Home/Data",
+                dataType: "json"
+              },
+              update: {
+                url: crudServiceBaseUrl + "/Products/Update",
+                dataType: "json"
+              },
+              destroy: {
+                url: crudServiceBaseUrl + "/Products/Destroy",
+                dataType: "json"
+              },
+              create: {
+                url: crudServiceBaseUrl + "/Products/Create",
+                dataType: "json"
+              },
+              parameterMap: function(options, operation) {
+                if (operation !== "read" && options.models) {
+                  return {models: kendo.stringify(options.models)};
+                }
+              }
+            },
+            batch: true,
+            pageSize: 20,
+            schema: {
+              model: {
+                id: "id",
+                fields: {
+                  id: { editable: false, nullable: true },
+                  name: { type: "string", editable: true },
+                  date: { type: "date", editable: true },
+                  gender: { type: "string", editable: true },
+                  hobbies: { type: "string", editable: true },
+                  cname: { type: "string", editable: true },
+                  imgPath: { type: "string", editable: true }
+                }
+              }
+            }
+          });
+
+          $("#grid").kendoGrid({
+            dataSource: dataSource,
+            pageable: true,
+            height: 550,
+            toolbar: ["create"],
+            columns: [
+              { field: "id", title: "ID", width: 100 },
+              { field: "name", title: "Name", format: "{0:c}", width: 105 },
+              { field: "date", title: "Date", format: "{0:yyyy-MM-dd}", width: 130 },
+              { field: "gender", title: "Gender", width: 125 },
+              { field: "hobbies", title: "Hobbies", width: 200 },
+              { field: "imgPath", title: "Image", template: "<div class='k-text-center'><img src='/images/#imgPath#' style='width=100px'/></div>", width: 120 },
+              { field: "cname", title: "Category", width: 105 },
+              { 
+                command: [
+                  "edit",
+                  { name: "myDelete", text: "Delete" }
+                ], 
+                title: "&nbsp;", 
+                width: "350px" 
+              }
+            ],
+            editable: {
+              mode: "inline",
+              confirmation: false
+            },
+            dataBound: function() {
+              $(".k-grid-myDelete span").addClass("k-icon k-delete");
+            },
+            cancel: function() {
+              setTimeout(function(){
+                $(".k-grid-myDelete span").addClass("k-icon k-delete");
+              });
+            }
+          });
+
+          $("#grid").on("click", ".k-grid-myDelete", function(e) {
+            e.preventDefault();
+
+            var command = $(this);
+            var cell = command.closest("td");
+
+            command.remove();
+            cell.append('<a class="k-button k-button-icontext k-grid-myConfirm" href="#"><span class="k-icon k-update"></span>Confirm</a>');
+            cell.append('<a class="k-button k-button-icontext k-grid-myCancel" href="#"><span class="k-icon k-cancel"></span>Cancel</a>');
+          });
+
+          $("#grid").on("click", ".k-grid-myConfirm", function(e){
+            e.preventDefault();
+            $("#grid").data("kendoGrid").removeRow($(this).closest("tr"));
+          });
+
+          $("#grid").on("click", ".k-grid-myCancel", function(e){
+            e.preventDefault();
+            $("#grid").data("kendoGrid").refresh();
+          });
+        });
+      </script>
+    </div>
+</body>
+</html>
